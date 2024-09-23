@@ -38,14 +38,14 @@ def main():
   history_vv = np.array([r], dtype=np.float32)
   history_analytical = np.array([r_init], dtype=np.float32)
 
-  for _ in range(nsteps):
+  for _ in range(nsteps-1):
     r, r_prev = verlet(r, r_prev, dt, m, r0)
     # cast r, r_prev to float32 to save memory
     history_verlet = np.append(history_verlet, r)
 
   r = r_init
   v = v_init
-  for _ in range(nsteps):
+  for _ in range(nsteps-1):
     r, v = velocity_verlet(r, v, dt, m, r0)
     history_vv = np.append(history_vv, r)
 
@@ -55,21 +55,27 @@ def main():
   history_analytical = analytical(r_init, v_init, t, m)
 
   plt.figure()
-  plt.plot(history_verlet, label='verlet')
-  plt.plot(history_vv, label='velocity verlet')
-  plt.plot(history_analytical, label='analytical')
+  plt.plot(t, history_verlet, label='verlet')
+  plt.plot(t, history_vv, label='velocity verlet')
+  plt.plot(t, history_analytical, label='analytical')
+  plt.xlabel('time')
+  plt.ylabel('position')
   plt.legend()
   plt.savefig('all.png')
 
   plt.figure()
-  plt.plot(history_verlet, label='verlet')
-  plt.plot(history_vv, label='velocity verlet')
+  plt.plot(t, history_verlet, label='verlet')
+  plt.plot(t, history_vv, label='velocity verlet')
+  plt.xlabel('time')
+  plt.ylabel('position')
   plt.legend()
   plt.savefig('v-vv.png')
 
   plt.figure()
-  plt.plot(history_verlet, label='verlet')
-  plt.plot(history_analytical, label='analytical')
+  plt.plot(t, history_verlet, label='verlet')
+  plt.plot(t, history_analytical, label='analytical')
+  plt.xlabel('time')
+  plt.ylabel('position')
   plt.legend()
   plt.savefig('v-analytical.png')
 
